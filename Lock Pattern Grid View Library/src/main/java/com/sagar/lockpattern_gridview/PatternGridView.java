@@ -21,14 +21,22 @@ import java.util.List;
  */
 public class PatternGridView extends View implements PatternInterface{
 
+    //Constansts which basically define the "theme" of the view
     public static final int PATTERN_TYPE_STORE = 0;
     public static final int PATTERN_TYPE_CHECK = 1;
 
     private static final int NUMBER_OF_COLUMNS = 3;
     private static final int NUMBER_OF_ROWS = 3;
 
+    /**
+     * Recommended minimum size of a cell (of a table of size {@link com.sagar.lockpattern_gridview.PatternGridView#NUMBER_OF_ROWS} *
+     * {@link com.sagar.lockpattern_gridview.PatternGridView#NUMBER_OF_COLUMNS}).
+     */
     private final float minCellSize = getResources().getDimension(R.dimen.min_cell_size);
 
+    /**Current theme; has to be one of {@link PatternGridView#PATTERN_TYPE_STORE} or
+     * {@link com.sagar.lockpattern_gridview.PatternGridView#PATTERN_TYPE_CHECK}
+     */
     private int mPatternType;
 
     private int mPaddingLeft, mPaddingRight, mPaddingTop, mPaddingBottom;
@@ -52,17 +60,24 @@ public class PatternGridView extends View implements PatternInterface{
 
     private boolean mIsInputEnabled = true;
 
-    private enum PatternState{BLANK, IN_PROGRESS, ENTERED};
+    private enum PatternState{BLANK, IN_PROGRESS, ENTERED}
     private PatternState mPatternState = PatternState.BLANK;
 
     private Path mPath = new Path();
 
     private int mCurrentX, mCurrentY;
 
+    //Triangles are the small arrows which indicate the direction of the pattern
     private Path[][] mTrianglePath = new Path[NUMBER_OF_ROWS][NUMBER_OF_COLUMNS];
     private Path[][] mTrianglePathBackup = new Path[NUMBER_OF_ROWS][NUMBER_OF_COLUMNS];
+
+    /*
+    Since the triangles can turn in many directions, using a matrix to apply the required
+    transformation whenever necessary
+    */
     private Matrix mTransformation = new Matrix();
 
+    //For keeping track of input
     private CellTracker mCellTracker = new CellTracker();
 
     public PatternGridView(Context context, AttributeSet attributeSet){
@@ -77,6 +92,9 @@ public class PatternGridView extends View implements PatternInterface{
         init();
     }
 
+    /**
+     * Setting up the various paint objects
+     */
     private void init(){
         mInnerCirclePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mInnerCirclePaint.setStyle(Paint.Style.FILL);
@@ -141,9 +159,13 @@ public class PatternGridView extends View implements PatternInterface{
 
     @Override
     public void setPatternType(int mPatternType) {
-        this.mPatternType = mPatternType;
-        invalidate();
-        requestLayout();
+        switch (mPatternType){
+            case PATTERN_TYPE_CHECK:
+            case PATTERN_TYPE_STORE:
+                this.mPatternType = mPatternType;
+                invalidate();
+                requestLayout();
+        }
     }
 
     @Override
@@ -202,6 +224,10 @@ public class PatternGridView extends View implements PatternInterface{
         super.onSizeChanged(w, h, oldw, oldh);
     }
 
+    /**
+     *  Computes the centers, upper and lower bounds, of all the rows and columns.
+     *  The appropriate coordinate is used in each case
+     */
     private void computePositions(){
         int x = mPaddingLeft;
         for (int i = 0; i < NUMBER_OF_COLUMNS; i++) {
@@ -246,7 +272,7 @@ public class PatternGridView extends View implements PatternInterface{
     }
 
     private int resolveMeasured(int measureSpec, int desired) {
-        int result = 0;
+        int result;
         int specSize = MeasureSpec.getSize(measureSpec);
         switch (MeasureSpec.getMode(measureSpec)) {
             case MeasureSpec.UNSPECIFIED:
@@ -265,8 +291,10 @@ public class PatternGridView extends View implements PatternInterface{
         return result;
     }
 
+    /**
+     * A helper class to keep track of the pattern drawn so far
+     */
     private class CellTracker {
-        private final String LOG_TAG = CellTracker.class.getSimpleName();
         private static final int mCells = NUMBER_OF_ROWS * NUMBER_OF_COLUMNS;
 
         private boolean[] isIncluded = new boolean[mCells];
@@ -276,6 +304,11 @@ public class PatternGridView extends View implements PatternInterface{
             clear();
         }
 
+        /**
+         * Add a cell to the current path.
+         * @param cellNumber cell number to be added ({@link com.sagar.lockpattern_gridview.PatternGridView#getCellNumberFromRowAndColumn(int, int)} can be used)
+         * @return false if it's already present or the cell number is invalid, true otherwise
+         */
         public boolean addCell(int cellNumber){
             if(cellNumber >= mCells || cellNumber < 0){
                 return false;
@@ -307,7 +340,7 @@ public class PatternGridView extends View implements PatternInterface{
                         previousRow = getRowFromCellNumber(previousCell);
                         previousColumn = getColumnFromCellNumber(previousCell);
                     }
-                    //Now setting rotation for the cute little triangles
+                    //Now setting rotation for the cute little triangles.Whenever a cell is added, we've to set the triangle in the previous cell
                     int cellCenterX = mColumnCenters[currentColumn],
                             cellCenterY = mRowCenters[currentRow],
                             previousCellCenterX = mColumnCenters[previousColumn],
@@ -358,12 +391,14 @@ public class PatternGridView extends View implements PatternInterface{
         }
 
         public boolean isCellIncluded(int cellNumber){
-            if(cellNumber >= mCells || cellNumber < 0){
-                return false;
-            }
-            return isIncluded[cellNumber];
+            return !(cellNumber >= mCells || cellNumber < 0) && isIncluded[cellNumber];
         }
 
+        /**
+         * Sets the path to be drawn on the canvas, according to the pattern entered so far.
+         * The direction arrows(Triangles) are also drawn.
+         * @param canvas upon which the direction arrows should be drawn
+         */
         public void setPath(Canvas canvas){
             if(mCellList.isEmpty())
                 return;
@@ -473,6 +508,7 @@ public class PatternGridView extends View implements PatternInterface{
     }
 
     private void handleActionMove(MotionEvent event){
+        //Handling all events since the last received, so that even if the device is very busy, user can reliably input the pattern
         for(int i=0; i<event.getHistorySize(); i++){
             mCellTracker.addCell(getHistoricalCell(event,i));
             if(mPatternState == PatternState.BLANK){
@@ -501,6 +537,11 @@ public class PatternGridView extends View implements PatternInterface{
         Log.d(VIEW_LOG_TAG, "Cancel");
     }
 
+    /**
+     * Return the cell in which the motion event happened
+     * @param event MotionEvent to be analyzed
+     * @return The cell in which event happened
+     */
     private int getCell(MotionEvent event){
         float x = event.getX(), y = event.getY();
         int row = getRowFromY(y);
@@ -551,9 +592,5 @@ public class PatternGridView extends View implements PatternInterface{
 
     private int getCellNumberFromRowAndColumn(int row, int column){
         return row * NUMBER_OF_COLUMNS + column;
-    }
-
-    private class TriangleHelper{
-
     }
 }
