@@ -10,6 +10,15 @@
 
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:id="@+id/text_view_status"
+        android:gravity="center"/>
+    <com.sagar.lockpattern_gridview.PatternGridView
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/pattern_view_store"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true"
+        app:patternType="checkPattern"/>
 
 </RelativeLayout>

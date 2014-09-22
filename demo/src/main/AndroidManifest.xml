@@ -27,7 +27,8 @@
         <activity
             android:name=".MatchPattern"
             android:label="@string/title_activity_match_pattern"
-            android:parentActivityName=".Demo" >
+            android:parentActivityName=".Demo"
+            android:theme="@android:style/Theme.Holo.Wallpaper.NoTitleBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.sagar.lockpattern_gridview.demo_patterngridview.demo.Demo" />

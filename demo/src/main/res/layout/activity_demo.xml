@@ -13,4 +13,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/title_activity_store_pattern"/>
+    <Button
+        android:id="@+id/button_match"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/button_Store"
+        android:text="@string/title_activity_match_pattern"/>
 </RelativeLayout>

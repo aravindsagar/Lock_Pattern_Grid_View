@@ -38,7 +38,7 @@ public class PatternGridView extends View implements PatternInterface{
     private PatternListener mPatternListener;
 
     private Paint mInnerCirclePaint, mInnerCircleHollowPaint, mOuterCirclePaint,
-            mOuterCircleCustomPaint, mLinePaint, mTrianglePaint;
+            mOuterCircleCustomPaint, mLinePaint, mTrianglePaint, mTriangleEnteredPaint;
 
     private int[] mRowCenters = new int[NUMBER_OF_ROWS];
     private int[] mColumnCenters = new int[NUMBER_OF_COLUMNS];
@@ -97,6 +97,9 @@ public class PatternGridView extends View implements PatternInterface{
         mTrianglePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mTrianglePaint.setStyle(Paint.Style.FILL);
 
+        mTriangleEnteredPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        mTriangleEnteredPaint.setStyle(Paint.Style.FILL);
+
         mLinePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mLinePaint.setStyle(Paint.Style.STROKE);
         mLinePaint.setDither(true);
@@ -110,6 +113,7 @@ public class PatternGridView extends View implements PatternInterface{
                 mInnerCircleHollowPaint.setColor(Color.BLACK);
                 mOuterCirclePaint.setColor(Color.BLACK);
                 mTrianglePaint.setColor(Color.BLACK);
+                mTriangleEnteredPaint.setColor(Color.BLACK);
                 mLinePaint.setColor(Color.BLACK);
                 break;
             case PATTERN_TYPE_CHECK:
@@ -117,6 +121,7 @@ public class PatternGridView extends View implements PatternInterface{
                 mInnerCircleHollowPaint.setColor(Color.WHITE);
                 mOuterCirclePaint.setColor(Color.WHITE);
                 mTrianglePaint.setColor(Color.WHITE);
+                mTriangleEnteredPaint.setColor(Color.WHITE);
                 mLinePaint.setColor(Color.WHITE);
                 break;
         }
@@ -167,6 +172,7 @@ public class PatternGridView extends View implements PatternInterface{
     @Override
     public void setRingColor(int color) {
         mOuterCircleCustomPaint.setColor(color);
+        mTriangleEnteredPaint.setColor(color);
     }
 
     @Override
@@ -377,7 +383,10 @@ public class PatternGridView extends View implements PatternInterface{
                 cellCenterX = mColumnCenters[currentColumn];
                 mPath.lineTo(cellCenterX, cellCenterY);
                 //Drawing the cute tiny triangles :)
-                canvas.drawPath(mTrianglePath[previousRow][previousColumn], mTrianglePaint);
+                if(mPatternState == PatternState.IN_PROGRESS)
+                    canvas.drawPath(mTrianglePath[previousRow][previousColumn], mTrianglePaint);
+                else
+                    canvas.drawPath(mTrianglePath[previousRow][previousColumn], mTriangleEnteredPaint);
             }
             if(mPatternState == PatternState.IN_PROGRESS)
                 mPath.lineTo(mCurrentX, mCurrentY);

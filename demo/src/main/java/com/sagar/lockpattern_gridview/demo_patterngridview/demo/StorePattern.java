@@ -11,12 +11,15 @@ import android.widget.TextView;
 import com.sagar.lockpattern_gridview.PatternGridView;
 import com.sagar.lockpattern_gridview.PatternInterface;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
 public class StorePattern extends Activity {
     private static final String PACKAGE_NAME = StorePattern.class.getPackage().getName();
     public static final String EXTRA_PATTERN = PACKAGE_NAME + ".EXTRA_PATTERN";
+    private static final int COLOR_VALID_PATTERN = Color.rgb(70, 170, 60);
+    private static final int COLOR_INVALID_PATTERN = Color.rgb(200, 70, 40);
 
     PatternGridView mPatternGridView;
     TextView mStatusView;
@@ -44,9 +47,7 @@ public class StorePattern extends Activity {
                     mStatusView.setText("Draw pattern again to confirm");
                 } else {
                     Intent returnIntent = new Intent();
-                    Integer[] resultArray = new Integer[mPattern.size()];
-                    mPattern.toArray(resultArray);
-                    returnIntent.putExtra(EXTRA_PATTERN, resultArray);
+                    returnIntent.putExtra(EXTRA_PATTERN, (ArrayList) mPattern);
                     setResult(RESULT_OK, returnIntent);
                     finish();
                 }
@@ -67,23 +68,23 @@ public class StorePattern extends Activity {
             public void onPatternEntered(List<Integer> pattern) {
                 if (pattern.size() < 4) {
                     mStatusView.setText("Connect at least 4 dots");
-                    mPatternGridView.setRingColor(Color.RED);
+                    mPatternGridView.setRingColor(COLOR_INVALID_PATTERN);
                     mContinueButton.setEnabled(false);
                 } else if(mState == PatternEntryState.FIRST_TIME){
                     mStatusView.setText("Pattern Recorded");
                     mContinueButton.setEnabled(true);
-                    mPatternGridView.setRingColor(Color.GREEN);
+                    mPatternGridView.setRingColor(COLOR_VALID_PATTERN);
                     mPattern = pattern;
                 } else {
                     if(mPattern.equals(pattern)){
                         mPatternGridView.setInputEnabled(false);
                         mContinueButton.setEnabled(true);
-                        mPatternGridView.setRingColor(Color.GREEN);
+                        mPatternGridView.setRingColor(COLOR_VALID_PATTERN);
                         mStatusView.setText("Your new pattern");
                     } else {
                         mContinueButton.setEnabled(false);
                         mStatusView.setText("Try again");
-                        mPatternGridView.setRingColor(Color.RED);
+                        mPatternGridView.setRingColor(COLOR_INVALID_PATTERN);
                     }
                 }
             }
