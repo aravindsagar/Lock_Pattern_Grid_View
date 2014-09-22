@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Lock Pattern Grid View Library/Lock Pattern Grid View Library.iml" filepath="$PROJECT_DIR$/Lock Pattern Grid View Library/Lock Pattern Grid View Library.iml" />
       <module fileurl="file://$PROJECT_DIR$/LockPatternGridView.iml" filepath="$PROJECT_DIR$/LockPatternGridView.iml" />
+      <module fileurl="file://$PROJECT_DIR$/demo/demo.iml" filepath="$PROJECT_DIR$/demo/demo.iml" />
     </modules>
   </component>
 </project>

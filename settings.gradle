@@ -1,1 +1,1 @@
-include ':Lock Pattern Grid View Library'
+include ':Lock Pattern Grid View Library', ':demo'
