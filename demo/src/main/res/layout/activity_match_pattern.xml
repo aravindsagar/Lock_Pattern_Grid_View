@@ -6,11 +6,10 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
-    tools:context=".Demo">
+    tools:context="com.sagar.lockpattern_gridview.demo_patterngridview.demo.MatchPattern">
 
-    <Button
-        android:id="@+id/button_Store"
+    <TextView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/title_activity_store_pattern"/>
+        android:layout_height="wrap_content" />
+
 </RelativeLayout>

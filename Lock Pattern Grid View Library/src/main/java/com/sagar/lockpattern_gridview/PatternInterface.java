@@ -1,7 +1,5 @@
 package com.sagar.lockpattern_gridview;
 
-import android.graphics.Color;
-
 import java.util.List;
 
 /**
@@ -11,14 +9,16 @@ import java.util.List;
 public interface PatternInterface {
     public void clearPattern();
     public List<Integer> getPattern();
-    public void setRingColor(Color color);
-    public void setOnPatternEnteredListener(OnPatternEnteredListener listener);
+    public void setRingColor(int color);
+    public void setPatternListener(PatternListener listener);
     public boolean isInputEnabled();
     public void setInputEnabled(boolean mIsInputEnabled);
     public int getPatternType();
     public void setPatternType(int mPatternType);
 
-    public interface OnPatternEnteredListener{
+    public interface PatternListener{
+        public void onPatternStarted();
         public void onPatternEntered(List<Integer> pattern);
+        public void onPatternCleared();
     }
 }

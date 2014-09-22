@@ -2,6 +2,10 @@
 <resources>
 
     <string name="app_name">Demo - Pattern Grid view</string>
+    <string name="title_activity_store_pattern">Store Pattern</string>
+    <string name="pattern_continue">Continue</string>
+    <string name="pattern_confirm">Confirm</string>
+    <string name="title_activity_match_pattern">Match Pattern</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
 

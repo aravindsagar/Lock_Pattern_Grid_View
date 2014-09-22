@@ -35,7 +35,7 @@ public class PatternGridView extends View implements PatternInterface{
 
     private float mCellHeight, mCellWidth;
 
-    private OnPatternEnteredListener mOnPatternEnteredListener;
+    private PatternListener mPatternListener;
 
     private Paint mInnerCirclePaint, mInnerCircleHollowPaint, mOuterCirclePaint,
             mOuterCircleCustomPaint, mLinePaint, mTrianglePaint;
@@ -154,21 +154,24 @@ public class PatternGridView extends View implements PatternInterface{
     @Override
     public void clearPattern() {
         mCellTracker.clear();
+        mPatternState = PatternState.BLANK;
+        mPatternListener.onPatternCleared();
+        invalidate();
     }
 
     @Override
     public List<Integer> getPattern() {
-        return mCellTracker.getCellNumberList();
+        return new ArrayList<Integer>(mCellTracker.getCellNumberList());
     }
 
     @Override
-    public void setRingColor(Color color) {
-
+    public void setRingColor(int color) {
+        mOuterCircleCustomPaint.setColor(color);
     }
 
     @Override
-    public void setOnPatternEnteredListener(OnPatternEnteredListener listener){
-        mOnPatternEnteredListener = listener;
+    public void setPatternListener(PatternListener listener){
+        mPatternListener = listener;
     }
 
     @Override
@@ -447,8 +450,14 @@ public class PatternGridView extends View implements PatternInterface{
         mCellTracker.clear();
         if(mCellTracker.addCell(getCell(event))){
             mPatternState = PatternState.IN_PROGRESS;
+            if(mPatternListener != null){
+                mPatternListener.onPatternStarted();
+            }
         } else if(mPatternState == PatternState.ENTERED){
             mPatternState = PatternState.BLANK;
+            if(mPatternListener != null){
+                mPatternListener.onPatternCleared();
+            }
         }
         invalidate();
         handleActionMove(event);
@@ -459,6 +468,9 @@ public class PatternGridView extends View implements PatternInterface{
             mCellTracker.addCell(getHistoricalCell(event,i));
             if(mPatternState == PatternState.BLANK){
                 mPatternState = PatternState.IN_PROGRESS;
+                if(mPatternListener != null){
+                    mPatternListener.onPatternStarted();
+                }
             }
         }
         mCellTracker.addCell(getCell(event));
@@ -469,8 +481,8 @@ public class PatternGridView extends View implements PatternInterface{
 
     private void handleActionUp(MotionEvent event){
         List<Integer> cellList = mCellTracker.getCellNumberList();
-        if(cellList != null && !cellList.isEmpty() && mOnPatternEnteredListener != null){
-            mOnPatternEnteredListener.onPatternEntered(cellList);
+        if(cellList != null && !cellList.isEmpty() && mPatternListener != null){
+            mPatternListener.onPatternEntered(new ArrayList<Integer>(cellList));
         }
         mPatternState = PatternState.ENTERED;
         invalidate();

@@ -16,6 +16,22 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".StorePattern"
+            android:label="@string/title_activity_store_pattern"
+            android:parentActivityName=".Demo" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.sagar.lockpattern_gridview.demo_patterngridview.demo.Demo" />
+        </activity>
+        <activity
+            android:name=".MatchPattern"
+            android:label="@string/title_activity_match_pattern"
+            android:parentActivityName=".Demo" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.sagar.lockpattern_gridview.demo_patterngridview.demo.Demo" />
+        </activity>
     </application>
 
 </manifest>
