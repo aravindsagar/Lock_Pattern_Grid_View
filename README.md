@@ -8,3 +8,4 @@ To use it, import it as a module in Android Studio (or a library in Eclipse). It
 I will update the readme with more details soon
 
 Link to Demo app: https://drive.google.com/file/d/0BwQqRzw1Ty__VHpwekNsRzM4Q2M/edit?usp=sharing
+If that does'nt work, try https://github.com/aravindsagar/Lock_Pattern_Grid_View/blob/master/demo/LockPatterndemo-release.apk?raw=true
